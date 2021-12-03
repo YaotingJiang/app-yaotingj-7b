@@ -21,8 +21,12 @@ from models.dogOwner import DogOwner
 def init_dog_owners():
     existing_dog_owners = DogOwner.objects()
     if len(existing_dog_owners) == 0:
-        create_dog_owner('dog', 'owner1', 'dogowner1@test.com', '4807773333', '111 toyama dr', 'Sunnyvale',
+        create_dog_owner('Jean', 'Wang', 'jw@test.com', '4807773333', '222 toyama dr', 'Sunnyvale',
                          'CA', '94089', 'USA', '4400 3333 0000 1111', '11/11/25', '000', 'coco', 'small', 'female')
+        create_dog_owner('Alice', 'Cohen', 'ac@test.com', '4807770000', '331 toyama dr', 'Sunnyvale',
+                         'CA', '94089', 'USA', '4400 0000 0000 1111', '11/12/22', '111', 'hans', 'big', 'male')
+        create_dog_owner('Cody', 'Brian', 'cb@test.com', '3807770010', '21 toyama dr', 'Sunnyvale',
+                         'CA', '94089', 'USA', '4422 0000 0000 2211', '03/12/22', '122', 'cindy', 'big', 'female')
 
 
 def create_dog_owner(first_name: str, last_name: str, email: str, phone: str, street_address: str, city: str, state: str, zipcode: str,
@@ -46,13 +50,19 @@ def create_dog_owner(first_name: str, last_name: str, email: str, phone: str, st
     dog_owner_doc.save()
     return dog_owner_doc
 
-def get_dog_owner(dog_owner_id: str):
+def get_dog_owner_by_id(dog_owner_id: str):
     if dog_owner_id is None:
         dog_owner_doc = DogOwner.objects()
     else:
         dog_owner_doc = DogOwner.objects(id=dog_owner_id)
     return dog_owner_doc
 
+def get_dog_owner(skip=1, limit=50, last_name=None):
+    if last_name is None:
+        dog_owner_doc = DogOwner.objects().skip(skip).limit(limit)
+    else:
+        dog_owner_doc = DogOwner.objects().skip(skip).limit(limit).order_by('last_name')
+    return dog_owner_doc
 
 def update_dog_owner(dog_owner_id: str, email: str, phone: str):
     dog_owner_doc = DogOwner.objects(id=dog_owner_id).first()  # extracting the first object from a list of one object

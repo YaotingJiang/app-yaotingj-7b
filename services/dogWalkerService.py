@@ -7,7 +7,15 @@ def init_dog_walkers():
         create_dog_walker('test', '1', 'dg1@test.com', '6178889999')
 
 
-def get_dog_walker(dog_walker_id: str):
+def get_dog_walker(skip=1, limit=50, rating=0):
+    print('limit', limit)
+    if rating == 0:
+        dog_walker_doc = DogWalker.objects().skip(skip).limit(limit)
+    else:
+        dog_walker_doc = DogWalker.objects(rating=rating).skip(skip).limit(limit)
+    return dog_walker_doc
+
+def get_dog_walker_by_id(dog_walker_id: str):
     if dog_walker_id is None:
         dog_walker_doc = DogWalker.objects()
     else:

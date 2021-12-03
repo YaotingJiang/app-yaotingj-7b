@@ -18,7 +18,14 @@ headers = {'Content-Type': 'application/json'}
 
 class DogWalkerResource(Resource):
     def get(self, dog_walker_id=None):
-        res = get_dog_walker(dog_walker_id)
+        if dog_walker_id is None:
+            args = reqparse.request.args;
+            query_from = int(args['from']) if 'from' in args else 0
+            query_count = int(args['count']) if 'count' in args else 50
+            query_filter_by_rating = int(args['rating']) if 'rating' in args else 0
+            res = get_dog_walker(query_from, query_count, query_filter_by_rating)
+        else:
+            res = get_dog_walker_by_id(dog_walker_id)
         return make_response(res.to_json(), 200, headers)
 
     def post(self):

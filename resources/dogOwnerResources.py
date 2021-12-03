@@ -32,7 +32,14 @@ class DogOwnerResource(Resource):
 
     # resources
     def get(self, dog_owner_id=None):
-        res = get_dog_owner(dog_owner_id)
+        if dog_owner_id is None:
+            args = reqparse.request.args;
+            query_from = int(args['from']) if 'from' in args else 0
+            query_count = int(args['count']) if 'count' in args else 50
+            query_sorting_by_lastname = int(args['rating']) if 'rating' in args else 0
+            res = get_dog_owner(query_from, query_count, query_sorting_by_lastname)
+        else:
+            res = get_dog_owner_by_id(dog_owner_id)
         return make_response(res.to_json(), 200, headers)
 
     def post(self):
